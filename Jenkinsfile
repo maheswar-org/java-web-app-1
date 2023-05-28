@@ -14,6 +14,16 @@ pipeline {
       }
     }
     stage('Upload to Artifactory') {
+          environment {
+          hostip = sh(script: '', hostname -I | awk '{print $1}' returnStdout: true)
+          url = http://$(hostip):8082
+        }
+        steps {
+          sh '''
+            echo "$url"
+          '''
+        }
+    }  
       agent {
         docker {
           image 'releases-docker.jfrog.io/jfrog/jfrog-cli-v2:2.2.0' 
@@ -21,8 +31,7 @@ pipeline {
         }
       }
       steps {
-        url = $(hostname -I | awk '{print $1}')
-        sh 'jfrog rt upload --url http://$(url):8082/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/demo-0.0.1-SNAPSHOT.jar java-web-app/'
+        sh 'jfrog rt upload --url http://192.168.29.131:8082/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/demo-0.0.1-SNAPSHOT.jar java-web-app/'
       }
     }
   }
