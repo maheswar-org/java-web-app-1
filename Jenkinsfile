@@ -13,11 +13,18 @@ pipeline {
         sh './mvnw clean install'
       }
     }
-    stage('Upload to Artifactory') {
-          environment {
-          hostip = sh(script: '', (hostname -I | awk '{print $1}') returnStdout: true)
-          url = http://$(hostip):8082
+    stage('Show Files') {
+        environment {
+          MY_FILES = sh(script: 'cd mydir && ls -l', returnStdout: true)
         }
+        steps {
+          sh '''
+            echo "$MY_FILES"
+          '''
+        }
+    }
+   stage('Upload to Artifactory') {
+          
         steps {
           sh '''
             echo "$url"
