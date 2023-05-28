@@ -15,7 +15,7 @@ pipeline {
     }
     stage('Upload to Artifactory') {
           environment {
-          hostip = sh(script: '', hostname -I | awk '{print $1}' returnStdout: true)
+          hostip = sh(script: '', (hostname -I | awk '{print $1}') returnStdout: true)
           url = http://$(hostip):8082
         }
         steps {
